@@ -1,0 +1,232 @@
+openapi: 3.0.0
+info:
+  title: Employees Management REST API
+  description: Coursera Employees Management with MongoDB ExpressJS NodeJS REST API
+  author: Saha Merlin swmdevops@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:5002/api/v1/
+    description: Localhost development server 
+  - url: http://employee-management-api:5002/api/v1/
+    description: Kubernetes/Docker-compose services
+components:
+  schemas:
+    Department:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+    
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        departmentId:
+          type: string
+        createdAt:
+          type: string
+
+paths:
+  title: Departments ressources
+  /departments:
+    get:
+      summary: Retrieves a list of departments
+      description: Retrieves a list of departments as JSON objects.
+      responses:
+        200:
+          description: A list of department JSON objects in an array.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Department"
+    
+    post:
+      summary: Create a new department
+      description: Create a new department     
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Department"
+
+      responses:
+        201:
+          description: Department created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+  
+  /departments/{id}:
+    get:
+      summary: Specific department
+      description: Retrieves a specific department based on it id.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Department id
+          schema:
+            type: string
+      responses:
+        200:
+          description: A department in the format of a JSON object.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+   
+    put:
+      summary: Updates a specific department
+      description: Updates a specific department based on it id            
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Department id
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Department"
+
+      responses:
+        201:
+          description: Department updated succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+
+    delete:
+      summary: Deletes a specific Department
+      description: Deletes a specific Department based on it id
+      security:
+        - ApiKeyAuth: []            
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Department id
+          schema:
+            type: string      
+
+      responses:
+        201:
+          description: Department deleted succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+
+
+# Employees
+  /employees:
+    get:
+      summary: Retrieves a list of employees
+      description: Retrieves a list of employees as JSON objects.
+      responses:
+        200:
+          description: A list of employee JSON objects in an array.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Employee"
+    
+    post:
+      summary: Create a new employee
+      description: Create a new employee     
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee"
+
+      responses:
+        201:
+          description: Employee created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+  
+  /employees/{id}:
+    get:
+      summary: Specific Employee
+      description: Retrieves a specific Employee based on it id.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Employee id
+          schema:
+            type: string
+      responses:
+        200:
+          description: An employee in the format of a JSON object.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+   
+    put:
+      summary: Updates a specific employee
+      description: Updates a specific employee based on it id            
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Employee id
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee"
+
+      responses:
+        201:
+          description: Employee updated succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+
+    delete:
+      summary: Deletes a specific Employee
+      description: Deletes a specific Employee based on it id           
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Employee id
+          schema:
+            type: string      
+
+      responses:
+        201:
+          description: Employee deleted succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
