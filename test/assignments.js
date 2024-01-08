@@ -64,7 +64,7 @@ describe('/Test Assignments', () => {
         }
 
         chai.request(app)
-          .post('/api/v1/assignments')
+          .post('/api/v1/assignments/assign')
           .send(data)
           .end((err, res) => {
             expect(res._body.message).to.be.equal("Empployee added successfully.");
@@ -103,9 +103,10 @@ describe('/Test Assignments', () => {
         }
 
         chai.request(app)
-          .delete('/api/v1/assignments')
+          .post('/api/v1/assignments/remove')
           .send(data)
           .end((err, res) => {
+            console.log(res._body)
             expect(res._body.message).to.be.equal("Empployee removed successfully.");
             expect(res.statusCode).to.be.equal(200);
             done();
