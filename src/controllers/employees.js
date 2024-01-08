@@ -5,6 +5,7 @@ const router = express.Router();
 
 export const saveEmployee = async (req, res) => {
     const employee = req.body;
+
     const newEmployee = new Employee({ ...employee, createdAt: new Date().toISOString() })
     try {
         await newEmployee.save();
@@ -17,17 +18,17 @@ export const saveEmployee = async (req, res) => {
 export const deleteEmployee = async (req, res) => {
     const { id } = req.params;
     if (!id) {
-        res.status(400).send({
+        res.status(400).json({
             error: true,
             message: "Id is required!"
         })
     }
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No employee with id: ${id}`);
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json(`No employee with id: ${id}`);
 
     try {
-        await Employee.findByIdAndRemove(id);
+        await Employee.findByIdAndDelete(id);
 
-        res.json({ message: "employee deleted successfully." });
+        res.status(200).json({ message: "employee deleted successfully." });
     } catch (error) {
         res.status(409).json({ message: error.message });
     }
@@ -36,18 +37,19 @@ export const deleteEmployee = async (req, res) => {
 export const updateEmployee = async (req, res) => {
 
     const { id } = req.params;
-    const { name, surname, departmentId } = req.body;
+    const { name, surname, birthDate, departmentId } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No employee with id: ${id}`);
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json(`No employee with id: ${id}`);
 
     try {
         const employee = await Employee.findById(id);
         employee.name = name;
         employee.surname = surname;
+        employee.birthDate = birthDate;
         employee.departmentId = departmentId;
         const updatedEmployee = await employee.save();
 
-        res.json(updatedEmployee);
+        res.status(201).json(updatedEmployee);
     } catch (error) {
         res.status(409).json({ message: error.message });
     }
@@ -56,47 +58,17 @@ export const updateEmployee = async (req, res) => {
 export const getEmployeeById = async (req, res) => {
     const { id } = req.params;
     if (!id) {
-        res.status(400).send({
+        res.status(400).json({
             error: true,
             message: "Id is required!"
         })
     }
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No employee with id: ${id}`);
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json(`No employee with id: ${id}`);
 
     try {
         const employee = await Employee.findById(id);
 
-        res.json({ data: employee });
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
-}
-
-export const getEmployeeByDepartment = async (req, res) => {
-    const { departmentId } = req.params;
-    const { page, limit } = req.query;
-
-    const options = {
-        page: page ?? 1,
-        limit: limit ?? 10,
-    };
-
-    if (!departmentId) {
-        res.status(400).send({
-            error: true,
-            message: "departmentId is required!"
-        })
-    }
-    try {
-        const employees = await Employee.paginate({ departmentId: departmentId }, options);
-        res.json({
-            data: employees.docs,
-            totalPages: employees.totalPages,
-            currentPages: employees.page,
-            hasNextPages: employees.hasNextPage,
-            hasPreviousPages: employees.hasPrevPage,
-            totalCollections: employees.totalDocs
-        });
+        res.status(200).json({ data: employee });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -112,7 +84,7 @@ export const getEmployees = async (req, res) => {
 
     try {
         const employees = await Employee.paginate({}, options);
-        res.json({
+        res.status(200).json({
             data: employees.docs,
             totalPages: employees.totalPages,
             currentPages: employees.page,

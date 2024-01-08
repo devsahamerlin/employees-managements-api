@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
+const Schema = mongoose.Schema;
 
-const employeeSchema = mongoose.Schema({
+const employeeSchema = new Schema({
     id: String,
     name: String,
     surname: String,
-    departmentId: String,
+    birthDate: String,
+    departments: [{ type: Schema.Types.ObjectId, ref: 'department' }],
     createdAt: {
         type: Date,
         default: new Date(),

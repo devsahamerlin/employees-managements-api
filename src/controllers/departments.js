@@ -6,7 +6,7 @@ const router = express.Router();
 export const saveDepartment = async (req, res) => {
     const department = req.body;
     if (!department.name) {
-        res.status(400).send({
+        res.status(400).json({
             error: true,
             message: "Name is required !"
         })
@@ -23,16 +23,16 @@ export const saveDepartment = async (req, res) => {
 export const deleteDepartment = async (req, res) => {
     const { id } = req.params;
     if (!id) {
-        res.status(400).send({
+        res.status(400).json({
             error: true,
             message: "Id is required !"
         })
     }
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No department with id: ${id}`);
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json(`No department with id: ${id}`);
 
     try {
-        await Department.findByIdAndRemove(id);
-        res.json({ message: "department deleted successfully." });
+        await Department.findByIdAndDelete(id);
+        res.status(200).json({ message: "department deleted successfully." });
 
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -44,7 +44,7 @@ export const updateDepartment = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     if (!id || !name) {
-        res.status(400).send({
+        res.status(400).json({
             error: true,
             message: "Id and Name are required!"
         })
@@ -57,7 +57,7 @@ export const updateDepartment = async (req, res) => {
         department.name = name;
 
         const updatedDepartment = await department.save();
-        res.json(updatedDepartment);
+        res.status(201).json(updatedDepartment);
 
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -67,17 +67,17 @@ export const updateDepartment = async (req, res) => {
 export const getDepartmentById = async (req, res) => {
     const { id } = req.params;
     if (!id) {
-        res.status(400).send({
+        res.status(400).json({
             error: true,
             message: "Id is required!"
         })
     }
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No department with id: ${id}`);
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json(`No department with id: ${id}`);
 
     try {
         const department = await Department.findById(id);
 
-        res.json({ data: department });
+        res.status(200).json({ data: department });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -93,7 +93,7 @@ export const getDepartments = async (req, res) => {
 
     try {
         const departments = await Department.paginate({}, options);
-        res.json({
+        res.status(200).json({
             data: departments.docs,
             totalPages: departments.totalPages,
             currentPages: departments.page,

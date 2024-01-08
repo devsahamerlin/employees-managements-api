@@ -65,7 +65,7 @@ describe('/Test Department Collection', () => {
       .put('/api/v1/departments/' + departmentId)
       .send(department)
       .end((err, res) => {
-        expect(res.statusCode).to.be.equal(200);
+        expect(res.statusCode).to.be.equal(201);
         expect(res._body._id).to.be.equal(departmentId);
         expect(res._body.name).to.be.equal(department.name);
         done();

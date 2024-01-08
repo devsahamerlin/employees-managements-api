@@ -8,13 +8,13 @@ servers:
   - url: http://localhost:5002/api/v1/
     description: Localhost development server 
   - url: http://employee-management-api:5002/api/v1/
-    description: Kubernetes/Docker-compose services
+    description: Kubernetes services
 components:
   schemas:
     Department:
       type: object
       properties:
-        id:
+        _id:
           type: string
         name:
           type: string
@@ -24,15 +24,23 @@ components:
     Employee:
       type: object
       properties:
-        id:
+        _id:
           type: string
         name:
           type: string
         surname:
           type: string
-        departmentId:
+        birthDate:
           type: string
         createdAt:
+          type: string
+
+    Assignment:
+      type: object
+      properties:
+        departmentId:
+          type: string
+        employeeId:
           type: string
 
 paths:
